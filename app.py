@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import mysql.connector
 
 class QuantumKeyDistributionApp:
     def __init__(self, root):
@@ -12,13 +13,30 @@ class QuantumKeyDistributionApp:
         self.client_ip_label.grid(row=0, column=0, padx=10, pady=10)
         self.client_ip_entry = tk.Entry(root)
         self.client_ip_entry.grid(row=1, column=0, padx=10, pady=10)
+        self.client_ip_entry.bind("<Return>", self.save_client_ip)  # Enter tuşuyla kaydetme işlevi
 
         # IP Address and Port Entry for Server
         self.server_ip_label = tk.Label(root, text="Sunucu IP ADRESİ")
         self.server_ip_label.grid(row=0, column=1, padx=10, pady=10)
         self.server_ip_entry = tk.Entry(root)
         self.server_ip_entry.grid(row=1, column=1, padx=10, pady=10)
+        self.server_ip_entry.bind("<Return>", self.save_server_ip)  # Enter tuşuyla kaydetme işlevi
 
+        # Connect to MySQL Database
+        self.db_connection = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",  # XAMPP varsayılan şifresi boş olabilir veya ayarladığınız şifreyi girin
+            database="ipadresleri"
+        )
+
+        # Veritabanı bağlantısı başarılıysa
+        if self.db_connection.is_connected():
+            print("MySQL veritabanına başarıyla bağlanıldı")
+            self.cursor = self.db_connection.cursor()
+        else:
+            print("MySQL veritabanına bağlanırken bir hata oluştu")
+        
         # Port Entry for Client
         self.client_port_label = tk.Label(root, text="İstemci Port Numarası:")
         self.client_port_label.grid(row=2, column=0, padx=10, pady=10)
@@ -31,9 +49,7 @@ class QuantumKeyDistributionApp:
         self.server_port_entry = tk.Entry(root)
         self.server_port_entry.grid(row=3, column=1, padx=10, pady=10)
 
-        # Quantum Key Distribution
-        self.qkd_label = tk.Label(root, text="Kuantum Anahtar Değişimi")
-        self.qkd_label.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+        # Quantum Key Distribution Button
         self.qkd_button = tk.Button(root, text="Anahtar Oluştur ve Paylaş", command=self.distribute_quantum_key)
         self.qkd_button.grid(row=5, column=0, columnspan=2, padx=10, pady=10)
 
@@ -75,7 +91,6 @@ class QuantumKeyDistributionApp:
         self.server_terminal = tk.Text(root, width=60, height=6)
         self.server_terminal.grid(row=4, column=1, padx=10, pady=10, sticky="e")
 
-
     def distribute_quantum_key(self):
         # Anahtar dağıtımı işlemleri burada gerçekleştirilir.
         pass
@@ -94,7 +109,18 @@ class QuantumKeyDistributionApp:
         # Sunucu için dosya şifreleme ve gönderme işlemleri burada gerçekleştirilir.
         pass
 
+    def save_client_ip(self, event):
+        ip_address = self.client_ip_entry.get()
+        # İp adresini veritabanına kaydetme işlemleri burada gerçekleştirilir.
+        print("İstemci İp Adresi:", ip_address)
+
+    def save_server_ip(self, event):
+        ip_address = self.server_ip_entry.get()
+        # İp adresini veritabanına kaydetme işlemleri burada gerçekleştirilir.
+        print("Sunucu İp Adresi:", ip_address)
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = QuantumKeyDistributionApp(root)
     root.mainloop()
+
