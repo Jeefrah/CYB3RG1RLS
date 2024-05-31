@@ -1,3 +1,4 @@
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import mysql.connector
@@ -111,16 +112,25 @@ class QuantumKeyDistributionApp:
 
     def save_client_ip(self, event):
         ip_address = self.client_ip_entry.get()
-        # İp adresini veritabanına kaydetme işlemleri burada gerçekleştirilir.
-        print("İstemci İp Adresi:", ip_address)
+        # Veritabanına IP adresi ekleme
+        sql = "INSERT INTO ipadresleri (ip) VALUES (%s)"
+        val = (ip_address,)
+        self.cursor.execute(sql, val)
+        self.db_connection.commit()
+        print("İstemci İp Adresi kaydedildi:", ip_address)
 
     def save_server_ip(self, event):
         ip_address = self.server_ip_entry.get()
-        # İp adresini veritabanına kaydetme işlemleri burada gerçekleştirilir.
-        print("Sunucu İp Adresi:", ip_address)
+        # Veritabanına IP adresi ekleme
+        sql = "INSERT INTO ipadresleri (ip) VALUES (%s)"
+        val = (ip_address,)
+        self.cursor.execute(sql, val)
+        self.db_connection.commit()
+        print("Sunucu İp Adresi kaydedildi:", ip_address)
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = QuantumKeyDistributionApp(root)
     root.mainloop()
+
 
